@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+        container_name: thanhtungbe_app
+        volumes:
+            - ./:/var/www
+        networks:
+            - laravel
+
+    web:
+        image: nginx:alpine
+        container_name: thanhtungbe_nginx
+        ports:
+            - "8000:80"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - app
+        networks:
+            - laravel
+
+    db:
+        image: mysql:8.0
+        container_name: thanhtungbe_db
+        environment:
+            MYSQL_DATABASE: thanhtung
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: laravel
+            MYSQL_PASSWORD: root
+        ports:
+            - "3306:3306"
+        networks:
+            - laravel
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: thanhtungbe_phpmyadmin
+        depends_on:
+            - db
+        ports:
+            - "8080:80"
+        environment:
+            PMA_HOST: db
+            MYSQL_ROOT_PASSWORD: root
+        networks:
+            - laravel
+
+networks:
+    laravel:
