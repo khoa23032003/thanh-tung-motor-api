@@ -8,12 +8,25 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('inventory_transactions', function (Blueprint $table) {
 
             $table->id();
 
-            $table->string('name', 100);
-            $table->string('logo_url', 255)->nullable();
+            $table->foreignId('product_id')
+                ->constrained('products');
+
+            $table->enum('reference_type', [
+                'OnlineOrder',
+                'RepairOrder',
+                'PurchaseOrder',
+                'ManualAdjustment'
+            ]);
+
+            $table->integer('reference_id');
+
+            $table->integer('quantity_change');
+
+            $table->integer('stock_after');
 
             $table->tinyInteger('deleted_flg')->default(0);
             $table->string('deleted_by')->nullable();
@@ -26,11 +39,14 @@ return new class extends Migration
             $table->timestamp('updated_at')
                 ->nullable()
                 ->useCurrentOnUpdate();
+
+            $table->index('product_id');
+            $table->index(['reference_type', 'reference_id']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('brands');
+        Schema::dropIfExists('inventory_transactions');
     }
 };

@@ -8,13 +8,29 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('menus', function (Blueprint $table) {
 
             $table->id();
 
-            $table->string('name', 100);
-            $table->string('logo_url', 255)->nullable();
+            // Sub menu
+            $table->foreignId('parent_id')
+                ->nullable()
+                ->constrained('menus')
+                ->cascadeOnDelete();
 
+            // Menu info
+            $table->string('title', 100);
+            $table->string('url', 255);
+            $table->string('icon', 50)->nullable();
+            $table->integer('position')->default(0);
+
+            // Role
+            $table->foreignId('role_id')
+                ->nullable()
+                ->constrained('roles')
+                ->nullOnDelete();
+
+            // Audit fields
             $table->tinyInteger('deleted_flg')->default(0);
             $table->string('deleted_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
@@ -31,6 +47,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('brands');
+        Schema::dropIfExists('menus');
     }
 };

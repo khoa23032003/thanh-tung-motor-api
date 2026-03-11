@@ -8,17 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('promotions', function (Blueprint $table) {
+
             $table->id();
 
-            $table->string('username', 50)->unique();
-            $table->string('password_hash', 255);
+            $table->string('code', 50)->unique();
 
-            $table->string('email', 100)->unique()->nullable();
-            $table->string('phone', 20)->unique();
+            $table->decimal('discount_percent', 5, 2)->default(0);
+            $table->decimal('discount_amount', 12, 2)->default(0);
 
-            $table->string('full_name', 100)->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
+
+            $table->integer('usage_limit')->default(100);
 
             $table->tinyInteger('deleted_flg')->default(0);
             $table->string('deleted_by')->nullable();
@@ -28,12 +30,14 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
 
             $table->string('updated_by')->nullable();
-            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
+            $table->timestamp('updated_at')
+                ->nullable()
+                ->useCurrentOnUpdate();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('promotions');
     }
 };

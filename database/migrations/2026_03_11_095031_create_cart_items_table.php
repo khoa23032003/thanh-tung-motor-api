@@ -8,17 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('cart_items', function (Blueprint $table) {
+
             $table->id();
 
-            $table->string('username', 50)->unique();
-            $table->string('password_hash', 255);
+            $table->foreignId('cart_id')
+                ->constrained('carts')
+                ->cascadeOnDelete();
 
-            $table->string('email', 100)->unique()->nullable();
-            $table->string('phone', 20)->unique();
+            $table->foreignId('product_id')
+                ->constrained('products');
 
-            $table->string('full_name', 100)->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->integer('quantity')->default(1);
 
             $table->tinyInteger('deleted_flg')->default(0);
             $table->string('deleted_by')->nullable();
@@ -28,12 +29,17 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
 
             $table->string('updated_by')->nullable();
-            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
+            $table->timestamp('updated_at')
+                ->nullable()
+                ->useCurrentOnUpdate();
+
+            $table->index('cart_id');
+            $table->index('product_id');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('cart_items');
     }
 };

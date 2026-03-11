@@ -8,17 +8,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('mechanics', function (Blueprint $table) {
+
             $table->id();
 
-            $table->string('username', 50)->unique();
-            $table->string('password_hash', 255);
+            $table->foreignId('user_id')
+                ->unique()
+                ->constrained('users');
 
-            $table->string('email', 100)->unique()->nullable();
-            $table->string('phone', 20)->unique();
-
-            $table->string('full_name', 100)->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->decimal('base_salary', 12, 2)->default(0);
+            $table->decimal('commission_rate', 5, 2)->default(0);
 
             $table->tinyInteger('deleted_flg')->default(0);
             $table->string('deleted_by')->nullable();
@@ -28,12 +27,16 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
 
             $table->string('updated_by')->nullable();
-            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
+            $table->timestamp('updated_at')
+                ->nullable()
+                ->useCurrentOnUpdate();
+
+            $table->index('user_id');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('mechanics');
     }
 };
