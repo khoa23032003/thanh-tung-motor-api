@@ -8,12 +8,28 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('appointments', function (Blueprint $table) {
 
             $table->id();
 
-            $table->string('name', 100);
-            $table->string('logo_url', 255)->nullable();
+            $table->foreignId('customer_id')
+                ->constrained('customers');
+
+            $table->foreignId('vehicle_id')
+                ->nullable()
+                ->constrained('vehicles');
+
+            $table->date('appointment_date');
+            $table->time('appointment_time');
+
+            $table->text('note')->nullable();
+
+            $table->enum('status', [
+                'Pending',
+                'Confirmed',
+                'Completed',
+                'Cancelled'
+            ])->default('Pending');
 
             $table->tinyInteger('deleted_flg')->default(0);
             $table->string('deleted_by')->nullable();
@@ -26,11 +42,14 @@ return new class extends Migration
             $table->timestamp('updated_at')
                 ->nullable()
                 ->useCurrentOnUpdate();
+
+            $table->index('customer_id');
+            $table->index('vehicle_id');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('brands');
+        Schema::dropIfExists('appointments');
     }
 };

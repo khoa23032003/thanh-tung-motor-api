@@ -8,12 +8,24 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('purchase_orders', function (Blueprint $table) {
 
             $table->id();
 
-            $table->string('name', 100);
-            $table->string('logo_url', 255)->nullable();
+            $table->foreignId('supplier_id')
+                ->constrained('suppliers');
+
+            $table->decimal('total_amount', 12, 2);
+            $table->decimal('paid_amount', 12, 2)->default(0);
+
+            $table->enum('status', [
+                'Pending',
+                'Received',
+                'Cancelled'
+            ])->default('Pending');
+
+            $table->timestamp('order_date')
+                ->useCurrent();
 
             $table->tinyInteger('deleted_flg')->default(0);
             $table->string('deleted_by')->nullable();
@@ -26,11 +38,13 @@ return new class extends Migration
             $table->timestamp('updated_at')
                 ->nullable()
                 ->useCurrentOnUpdate();
+
+            $table->index('supplier_id');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('brands');
+        Schema::dropIfExists('purchase_orders');
     }
 };

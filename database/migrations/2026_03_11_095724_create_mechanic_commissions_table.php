@@ -8,12 +8,24 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('mechanic_commissions', function (Blueprint $table) {
 
             $table->id();
 
-            $table->string('name', 100);
-            $table->string('logo_url', 255)->nullable();
+            $table->foreignId('mechanic_id')
+                ->constrained('mechanics');
+
+            $table->foreignId('repair_labor_id')
+                ->constrained('repair_labor');
+
+            $table->decimal('amount', 12, 2);
+
+            $table->date('earned_date');
+
+            $table->enum('status', [
+                'Unpaid',
+                'Paid'
+            ])->default('Unpaid');
 
             $table->tinyInteger('deleted_flg')->default(0);
             $table->string('deleted_by')->nullable();
@@ -26,11 +38,14 @@ return new class extends Migration
             $table->timestamp('updated_at')
                 ->nullable()
                 ->useCurrentOnUpdate();
+
+            $table->index('mechanic_id');
+            $table->index('repair_labor_id');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('brands');
+        Schema::dropIfExists('mechanic_commissions');
     }
 };

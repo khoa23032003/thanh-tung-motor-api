@@ -8,16 +8,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('services', function (Blueprint $table) {
+
             $table->id();
 
-            $table->string('username', 50)->unique();
-            $table->string('password_hash', 255);
+            $table->string('name', 255);
+            $table->decimal('price', 12, 2);
 
-            $table->string('email', 100)->unique()->nullable();
-            $table->string('phone', 20)->unique();
-
-            $table->string('full_name', 100)->nullable();
+            $table->integer('estimated_time_minutes')->nullable();
             $table->boolean('is_active')->default(true);
 
             $table->tinyInteger('deleted_flg')->default(0);
@@ -28,12 +26,14 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
 
             $table->string('updated_by')->nullable();
-            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
+            $table->timestamp('updated_at')
+                ->nullable()
+                ->useCurrentOnUpdate();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('services');
     }
 };

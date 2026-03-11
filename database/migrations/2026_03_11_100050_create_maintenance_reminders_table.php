@@ -8,12 +8,22 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('maintenance_reminders', function (Blueprint $table) {
 
             $table->id();
 
-            $table->string('name', 100);
-            $table->string('logo_url', 255)->nullable();
+            $table->foreignId('vehicle_id')
+                ->constrained('vehicles');
+
+            $table->foreignId('repair_order_id')
+                ->constrained('repair_orders');
+
+            $table->date('reminder_date');
+
+            $table->text('message');
+
+            $table->boolean('is_sent')
+                ->default(false);
 
             $table->tinyInteger('deleted_flg')->default(0);
             $table->string('deleted_by')->nullable();
@@ -26,11 +36,14 @@ return new class extends Migration
             $table->timestamp('updated_at')
                 ->nullable()
                 ->useCurrentOnUpdate();
+
+            $table->index('vehicle_id');
+            $table->index('repair_order_id');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('brands');
+        Schema::dropIfExists('maintenance_reminders');
     }
 };
