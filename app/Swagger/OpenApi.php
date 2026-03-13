@@ -15,7 +15,11 @@ use OpenApi\Annotations as OA;
  *     url="http://localhost:8000",
  *     description="Local server"
  * )
+ *
+ * @OA\SecurityScheme(
+ *     securityScheme="sanctum",
+ *     type="http",
+ *     scheme="bearer"
+ * )
  */
-class OpenApi
-{
-}
+class OpenApi {}

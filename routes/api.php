@@ -1,11 +1,16 @@
 <?php
 
-use App\Http\Controllers\Api\TestController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\BrandsController;
-use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
-//route thêm
 Route::apiResource('brands', BrandsController::class);
 
-Route::get('/test', [TestController::class, 'index']);
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login',    [AuthController::class, 'login']);
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+    });
+});

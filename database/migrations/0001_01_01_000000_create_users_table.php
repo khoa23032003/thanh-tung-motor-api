@@ -12,10 +12,10 @@ return new class extends Migration
             $table->id();
 
             $table->string('username', 50)->unique();
-            $table->string('password_hash', 255);
+            $table->string('password', 255);
 
             $table->string('email', 100)->unique()->nullable();
-            $table->string('phone', 20)->unique();
+            $table->string('phone', 20)->unique()->nullable();
 
             $table->string('full_name', 100)->nullable();
             $table->boolean('is_active')->default(true);

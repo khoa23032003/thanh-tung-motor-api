@@ -12,25 +12,248 @@
         }
     ],
     "paths": {
-        "/api/test": {
-            "get": {
+        "/api/auth/login": {
+            "post": {
                 "tags": [
-                    "Test"
+                    "Auth"
                 ],
-                "summary": "Test Swagger",
-                "operationId": "af4eef7c415174b57a22c482494a6a28",
+                "summary": "Login",
+                "operationId": "b1d09fc4228363a5d28c14dc3f2b1747",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "login",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "login": {
+                                        "type": "string",
+                                        "example": "johndoe or john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Password@123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "Success"
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "1|abc123..."
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "Bearer"
+                                                },
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "username": {
+                                                            "type": "string",
+                                                            "example": "johndoe"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "john@example.com"
+                                                        },
+                                                        "full_name": {
+                                                            "type": "string",
+                                                            "example": "John Doe"
+                                                        },
+                                                        "phone": {
+                                                            "type": "string",
+                                                            "example": "0901234567"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout",
+                "operationId": "205a11b771ad07fc5add5a141b37b0b4",
+                "responses": {
+                    "200": {
+                        "description": "Logout successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout successful"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new user",
+                "operationId": "3665ccd9f8f28d2fc3632781d4281de9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "johndoe"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Password@123"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john@example.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "0901234567"
+                                    },
+                                    "full_name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User registered successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "username": {
+                                                    "type": "string",
+                                                    "example": "johndoe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com"
+                                                },
+                                                "phone": {
+                                                    "type": "string",
+                                                    "example": "0901234567"
+                                                },
+                                                "full_name": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
                 }
             }
         }
     },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    },
     "tags": [
         {
-            "name": "Test",
-            "description": "Test"
+            "name": "Auth",
+            "description": "Auth"
         }
     ]
 }

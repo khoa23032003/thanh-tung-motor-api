@@ -10,23 +10,14 @@ return new class extends Migration
     {
         Schema::create('audit_logs', function (Blueprint $table) {
             $table->id();
-
             $table->timestamp('logged_at', 6)->useCurrent();
-
-            $table->foreignId('user_id')
-                ->nullable()
-                ->constrained('users')
-                ->nullOnDelete();
-
+            $table->string('user', 255)->nullable();
             $table->string('ip_address', 45)->nullable();
-            $table->string('event_type', 50)->nullable();
-            $table->string('resource_type', 50)->nullable();
-
+            $table->string('event_type', 50);
+            $table->string('resource_type', 50);
             $table->unsignedBigInteger('resource_id')->nullable();
-
-            $table->tinyInteger('status')->nullable();
+            $table->tinyInteger('status');
             $table->json('details')->nullable();
-
             $table->string('session_id', 128)->nullable();
         });
     }
