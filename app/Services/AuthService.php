@@ -48,4 +48,9 @@ class AuthService
     {
         auth()->user()->currentAccessToken()->delete();
     }
+
+    public function me(): User
+    {
+        return auth()->user();
+    }
 }
