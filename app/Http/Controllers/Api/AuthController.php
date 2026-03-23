@@ -47,4 +47,14 @@ class AuthController extends Controller
             'message' => __('auth.logout_success'),
         ]);
     }
+
+    public function me(): JsonResponse
+    {
+        $user = $this->authService->me();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $user,
+        ]);
+    }
 }
