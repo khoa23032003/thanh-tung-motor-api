@@ -53,4 +53,17 @@ class AuthService
     {
         return auth()->user();
     }
+
+    public function updateProfile(array $data): User
+    {
+        $user = auth()->user();
+
+        $updateData = ['updated_by' => $user->username];
+
+        if (isset($data['email']))     $updateData['email']     = $data['email'];
+        if (isset($data['phone']))     $updateData['phone']     = $data['phone'];
+        if (isset($data['full_name'])) $updateData['full_name'] = $data['full_name'];
+
+        return $this->userRepository->update($user->id, $updateData);
+    }
 }

@@ -5,8 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
-class RegisterRequest extends FormRequest
+class UpdateProfileRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,11 +16,11 @@ class RegisterRequest extends FormRequest
 
     public function rules(): array
     {
+        $userId = Auth::id();
+
         return [
-            'username'  => 'required|string|max:50|unique:users,username',
-            'password'  => 'required|string|min:8',
-            'email'     => 'nullable|email|max:100|unique:users,email',
-            'phone'     => 'nullable|string|max:20|unique:users,phone',
+            'email'     => 'nullable|email|max:100|unique:users,email,' . $userId,
+            'phone'     => 'nullable|string|max:20|unique:users,phone,' . $userId,
             'full_name' => 'nullable|string|max:100',
         ];
     }
