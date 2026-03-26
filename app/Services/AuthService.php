@@ -66,4 +66,18 @@ class AuthService
 
         return $this->userRepository->update($user->id, $updateData);
     }
+
+    public function changePassword(array $data): void
+    {
+        $user = auth()->user();
+
+        if (!Hash::check($data['current_password'], $user->getRawOriginal('password'))) {
+            throw new Exception(__('auth.change_password.current_password_incorrect'), 400);
+        }
+
+        $this->userRepository->update($user->id, [
+            'password'   => $data['new_password'],
+            'updated_by' => $user->username,
+        ]);
+    }
 }

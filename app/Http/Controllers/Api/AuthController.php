@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateProfileRequest;
@@ -67,6 +68,16 @@ class AuthController extends Controller
             'success' => true,
             'message' => __('auth.profile_updated'),
             'data'    => $user,
+        ]);
+    }
+
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        $this->authService->changePassword($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => __('auth.change_password.success'),
         ]);
     }
 }
